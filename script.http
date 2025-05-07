@@ -1,0 +1,42 @@
+### Register a new user
+POST http://localhost:8082/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### Authenticate user
+POST http://localhost:8082/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+### Get all directions
+GET http://localhost:8082/catalog/directions
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+### Get courses by direction
+GET http://localhost:8082/catalog/directions/programming
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+### Get course details
+GET http://localhost:8082/catalog/courses/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+### Enroll in a course
+POST http://localhost:8082/catalog/users/123/enroll
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+{
+  "courseId": "1",
+  "tariff": "BASIC",
+  "name": "John Doe",
+  "email": "john@example.com"
+}
