@@ -30,9 +30,8 @@ services:
     environment:
       SPRING_DATA_MONGODB_HOST: mongodb
       SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
       SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING: "true"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/skillbox
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/skillbox
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
@@ -48,9 +47,8 @@ services:
     environment:
       SPRING_DATA_MONGODB_HOST: mongodb
       SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
       SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING: "true"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/skillbox
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/skillbox
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
