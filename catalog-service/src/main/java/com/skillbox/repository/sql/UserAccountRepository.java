@@ -1,5 +1,6 @@
 package com.skillbox.repository.sql;
 
+import com.skillbox.entity.Role;
 import com.skillbox.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,4 +11,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     Optional<UserAccount> findByMongoUserId(String mongoUserId);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+
+    int countByRolesContaining(Role role);
 }

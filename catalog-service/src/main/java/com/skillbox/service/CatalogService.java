@@ -59,7 +59,6 @@ public class CatalogService {
 
     @PreAuthorize("hasAuthority('ENROLL_COURSE')")
     public String enrollUserToCourse(EnrollManuallyRequest request) {
-        // Define transaction
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus status = transactionManager.getTransaction(def);
@@ -68,10 +67,8 @@ public class CatalogService {
             User user = getUser(request.getUserId());
             String defaultEmail = "dima@example.com";
 
-            // Check if user exists in SQL database as well
             UserAccount userAccount = userAccountRepository.findByMongoUserId(request.getUserId())
-                .orElseThrow(() -> ErrorResponse.userNotFound(request.getUserId()));
-            // Now we can use userAccount if needed
+                    .orElseThrow(() -> ErrorResponse.userNotFound(request.getUserId()));
 
             if (!defaultEmail.equals(request.getEmail()) && !user.getEmail().equals(request.getEmail())) {
                 throw ErrorResponse.emailMismatch();
@@ -95,20 +92,21 @@ public class CatalogService {
                 throw ErrorResponse.userAlreadyEnrolled(request.getUserId(), request.getCourseId());
             }
 
-            // Generate payment link
+            // Добавим курс пользователю
+            user.getEnrolledCourses().add(request.getCourseId());
+            userRepo.save(user); // <-- Сохраняем обновлённого пользователя в MongoDB
+
             String paymentLink = paymentClient.generatePaymentLink(
-                    request.getUserId(), 
-                    request.getCourseId(), 
-                    request.getName(), 
-                    request.getEmail(), 
+                    request.getUserId(),
+                    request.getCourseId(),
+                    request.getName(),
+                    request.getEmail(),
                     request.getTariff()
             );
 
-            // Commit transaction
             transactionManager.commit(status);
             return paymentLink;
         } catch (Exception e) {
-            // Rollback transaction on error
             transactionManager.rollback(status);
             throw e;
         }

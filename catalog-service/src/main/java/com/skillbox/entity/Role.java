@@ -23,6 +23,9 @@ public class Role {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @ManyToMany(mappedBy = "roles")
+    private List<UserAccount> users;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_privileges",
