@@ -52,7 +52,7 @@ public class CatalogController {
                     @ApiResponse(responseCode = "404", description = "Курсы не найдены")
             }
     )
-    @GetMapping("/courses/{direction}")
+    @GetMapping("/directions/{direction}")
     public ResponseEntity<List<String>> getCourses(@PathVariable(name = "direction") String direction) {
         List<String> courseTitles = catalogService.getCoursesByDirection(direction)
                 .stream()
@@ -82,44 +82,6 @@ public class CatalogController {
         Course course = catalogService.getCourseDetails(courseId);
         return ResponseEntity.ok(course);
     }
-
-    @Operation(
-            summary = "Выбрать метод аутентификации для записи на курс",
-            description = "Позволяет пользователю выбрать метод аутентификации (VK или manual) перед записью на курс.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Ответ с деталями аутентификации"),
-                    @ApiResponse(responseCode = "400", description = "Неверный метод аутентификации")
-            }
-    )
-    @PostMapping("/enroll/auth-method")
-    public ResponseEntity<String> chooseAuthMethod(@RequestBody EnrollRequest request) {
-        if (request.getUserId().isBlank() || request.getCourseId().isBlank()) {
-            throw ErrorResponse.badRequest("User ID и Course ID не могут быть пустыми");
-        }
-        if ("vk".equalsIgnoreCase(request.getMethod())) {
-            String userName = "Дмитрий Борисович Афанасьев";
-            String userEmail = "dima@example.com";
-
-            request.setName(userName);
-            request.setEmail(userEmail);
-
-            try {
-                String paymentLink = catalogService.enrollUserToCourse(request);
-                return ResponseEntity.ok(paymentLink);
-            } catch (ResponseStatusException e) {
-                throw e;
-            } catch (Exception e) {
-                throw ErrorResponse.internalError("Произошла ошибка при записи на курс");
-            }
-        }
-        else if ("manual".equalsIgnoreCase(request.getMethod())) {
-            return ResponseEntity.ok("Вы выбрали авторизацию без ВК. Перейдите в /enroll/manual");
-        }
-        else {
-            throw ErrorResponse.invalidAuthMethod(request.getMethod());
-        }
-    }
-
 
     @Operation(
             summary = "Записать пользователя на курс",

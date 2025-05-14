@@ -2,10 +2,13 @@ package com.skillbox.migration;
 
 import com.skillbox.entity.Privilege;
 import com.skillbox.entity.Role;
+import com.skillbox.entity.UserAccount;
 import com.skillbox.repository.sql.PrivilegeRepository;
 import com.skillbox.repository.sql.RoleRepository;
+import com.skillbox.repository.sql.UserAccountRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -22,6 +25,8 @@ public class PostgresDataInitializer {
     private final PrivilegeRepository privilegeRepository;
     private final RoleRepository roleRepository;
     private final PlatformTransactionManager transactionManager;
+    private final UserAccountRepository userAccountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void init() {
@@ -45,10 +50,22 @@ public class PostgresDataInitializer {
                 createRoleIfNotFound("ROLE_USER", studentPrivileges);
 
                 List<Privilege> adminPrivileges = Arrays.asList(
-                        readCatalog, readUserInfo, enrollCourse, manageCourses, 
+                        readCatalog, readUserInfo, enrollCourse, manageCourses,
                         createPayment, processPayment, adminPrivilege
                 );
-                createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+                Role roleAdmin = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+
+                if (userAccountRepository.count() == 0) {
+                    UserAccount admin = UserAccount.builder()
+                            .email("example@mail.ru")
+                            .roles(List.of(roleAdmin))
+                            .username("admin")
+                            .password(passwordEncoder.encode("admin"))
+                            .mongoUserId(String.valueOf(0))
+                            .build();
+                    userAccountRepository.save(admin);
+                }
+
             }
         });
     }

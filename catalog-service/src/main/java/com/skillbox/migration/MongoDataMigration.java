@@ -1,17 +1,18 @@
 package com.skillbox.migration;
 
-import com.skillbox.model.TariffType;
 import com.skillbox.model.Course;
 import com.skillbox.model.CourseTask;
+import com.skillbox.model.TariffType;
 import com.skillbox.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -62,6 +63,8 @@ public class MongoDataMigration implements ApplicationListener<ContextRefreshedE
             user3.setName("Афанасий");
             user3.setEmail("dima@example.com");
             user3.setEnrolledCourses(List.of());
+
+            mongoTemplate.save(new User(String.valueOf(0), "admin", "example@mail.ru", new ArrayList<>()));
 
             mongoTemplate.save(user1);
             mongoTemplate.save(user2);

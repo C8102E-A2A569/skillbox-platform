@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim
+FROM openjdk:21
 
 WORKDIR /app
 
@@ -9,4 +9,4 @@ COPY target/*.jar app.jar
 # Set environment variables
 ENV SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING=true
 
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007 -jar app.jar"]

@@ -48,4 +48,12 @@ public class ErrorResponse {
     public static ResponseStatusException internalError(String message) {
         return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
+
+    public static ResponseStatusException userPasswordMismatch(String username) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверный пароль для пользователя " + username);
+    }
+
+    public static ResponseStatusException userNotFoundByUsername(String username) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь с именем " + username + " не найден");
+    }
 }

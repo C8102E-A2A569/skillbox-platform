@@ -50,7 +50,6 @@ public class ExtendedAuthenticationController {
         return ResponseEntity.ok(service.registerWithRoles(request));
     }
 
-    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
     public ResponseEntity<AuthenticationResponse> withManageRolesCheck(ExtendedRegisterRequest request) {
         return ResponseEntity.ok(service.registerWithRoles(request));
     }

@@ -30,34 +30,28 @@ public class CatalogService {
     private final UserAccountRepository userAccountRepository;
     private final PlatformTransactionManager transactionManager;
 
-    @PreAuthorize("hasAuthority('READ_CATALOG')")
     public List<String> getAllDirections() {
         return courseRepo.findAllDirections();
     }
 
-    @PreAuthorize("hasAuthority('READ_CATALOG')")
     public Course getCourseDetails(String courseId) {
         return courseRepo.findById(courseId)
                 .orElseThrow(() -> ErrorResponse.courseNotFound(courseId));
     }
 
-    @PreAuthorize("hasAuthority('READ_CATALOG')")
     public List<Course> getCoursesByDirection(String direction) {
         return courseRepo.findByDirection(direction);
     }
 
-    @PreAuthorize("hasAuthority('READ_USER_INFO')")
     public UserAccount getUserAccount(String username) {
         return userAccountRepository.findByUsername(username)
                 .orElseThrow(() -> ErrorResponse.userNotFound(username));
     }
 
-    @PreAuthorize("hasAuthority('READ_USER_INFO')")
     public User getUser(String userId) {
         return userRepo.findById(userId).orElseThrow(() -> ErrorResponse.userNotFound(userId));
     }
 
-    @PreAuthorize("hasAuthority('ENROLL_COURSE')")
     public String enrollUserToCourse(EnrollManuallyRequest request) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -112,12 +106,10 @@ public class CatalogService {
         }
     }
 
-    @PreAuthorize("hasAuthority('MANAGE_COURSES')")
     public Course createCourse(Course course) {
         return courseRepo.save(course);
     }
 
-    @PreAuthorize("hasAuthority('MANAGE_COURSES')")
     public void deleteCourse(String courseId) {
         courseRepo.deleteById(courseId);
     }
