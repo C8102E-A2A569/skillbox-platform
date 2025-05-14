@@ -1,13 +1,16 @@
 package com.skillbox.service;
 
+import com.skillbox.client.UserClient;
+import com.skillbox.client.dto.UserDto;
 import com.skillbox.dto.PaymentRequest;
 import com.skillbox.exception.ErrorResponse;
 import com.skillbox.model.Bank;
 import com.skillbox.model.Payment;
 import com.skillbox.repository.BankRepository;
 import com.skillbox.repository.PaymentRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -17,6 +20,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +33,27 @@ public class PaymentService {
     private final RestTemplate restTemplate;
     private final PlatformTransactionManager transactionManager;
 
-    private String catalogServiceUrl =  "http://catalog-service:8080";
+    @Value("${catalog-service.url}")
+    private String catalogServiceUrl;
+    private final UserClient userClient;
 
-    @PreAuthorize("hasAuthority('CREATE_PAYMENT')")
+    @PostConstruct
+    public void lala() {
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+
+        scheduledExecutorService.schedule(() -> {
+            try {
+                UserDto userById = userClient.getUserByName("admin");
+                System.out.println("\nTest reach Catalog-service");
+                System.out.println(userById);
+                System.out.println("\n");
+            } catch (Exception ignored) {
+                System.out.println("\nWARNING: Catalog-service unreachable!\n\n");
+            }
+        }, 10, TimeUnit.SECONDS);
+
+    }
+
     public String createPayment(PaymentRequest request) {
         String paymentLink = "https://bank.example.com/pay/" + UUID.randomUUID();
 
@@ -48,8 +72,6 @@ public class PaymentService {
         return paymentLink;
     }
 
-
-    @PreAuthorize("hasAuthority('PROCESS_PAYMENT')")
     public String processPayment(String userId, String paymentLink, double amount) {
         // Define transaction
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();

@@ -5,6 +5,7 @@ import com.skillbox.dto.auth.AuthenticationResponse;
 import com.skillbox.dto.auth.RegisterRequest;
 import com.skillbox.entity.Role;
 import com.skillbox.entity.UserAccount;
+import com.skillbox.exception.ErrorResponse;
 import com.skillbox.model.User;
 import com.skillbox.repository.mongo.UserRepository;
 import com.skillbox.repository.sql.RoleRepository;
@@ -12,8 +13,6 @@ import com.skillbox.repository.sql.UserAccountRepository;
 import com.skillbox.security.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ public class AuthenticationService {
     private final UserRepository mongoUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+//    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
@@ -60,15 +59,23 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        // код ниже проверяет ТОКЕН на валидность, а наш пользователь еще его не должен иметь, он только что зарегистрировался,
+        // и только после логина будем проверять на валидность токен, а пока не надо
+        /*
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
+        */
 
         UserAccount userAccount = userAccountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> ErrorResponse.userNotFoundByUsername(request.getUsername()));
+
+        if (!passwordEncoder.matches(request.getPassword(), userAccount.getPassword())) {
+            throw ErrorResponse.userPasswordMismatch(request.getUsername());
+        }
 
         String jwtToken = jwtService.generateToken(userAccount);
         return AuthenticationResponse.builder()

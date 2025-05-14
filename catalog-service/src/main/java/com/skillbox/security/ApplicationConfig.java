@@ -1,5 +1,6 @@
 package com.skillbox.security;
 
+import com.skillbox.exception.BusinessException;
 import com.skillbox.repository.sql.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new BusinessException("User not found"));
     }
 
     @Bean

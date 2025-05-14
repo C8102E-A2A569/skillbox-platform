@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(() -> ErrorResponse.userNotFound(userId));
     }
 
+    public User getUserByName(String name) {
+        return userRepository.findByName(name).orElseThrow(() -> ErrorResponse.userNotFoundByUsername(name));
+    }
+
     public String getTaskDescriptionByCourseId(String userId, String courseId) {
         User user = getUserById(userId);
         if (user == null) {

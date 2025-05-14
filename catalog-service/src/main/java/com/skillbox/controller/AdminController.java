@@ -30,7 +30,6 @@ public class AdminController {
             description = "Создает новую привилегию в системе"
     )
     @PostMapping("/privileges")
-    @PreAuthorize("hasAuthority('MANAGE_PRIVILEGES')")
     public ResponseEntity<Privilege> createPrivilege(@RequestBody Map<String, String> request) {
         String name = request.get("name");
         Privilege privilege = Privilege.builder().name(name).build();
@@ -42,7 +41,6 @@ public class AdminController {
             description = "Возвращает список всех привилегий в системе"
     )
     @GetMapping("/privileges")
-    @PreAuthorize("hasAuthority('READ_PRIVILEGES')")
     public ResponseEntity<List<Privilege>> getAllPrivileges() {
         return ResponseEntity.ok(privilegeRepository.findAll());
     }
@@ -52,7 +50,6 @@ public class AdminController {
             description = "Создает новую роль в системе"
     )
     @PostMapping("/roles")
-    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
     public ResponseEntity<Role> createRole(@RequestBody Map<String, String> request) {
         String name = request.get("name");
         Role role = Role.builder().name(name).build();
@@ -64,7 +61,6 @@ public class AdminController {
             description = "Возвращает список всех ролей в системе"
     )
     @GetMapping("/roles")
-    @PreAuthorize("hasAuthority('READ_ROLES')")
     public ResponseEntity<List<Role>> getAllRoles() {
         return ResponseEntity.ok(roleRepository.findAll());
     }
@@ -74,7 +70,6 @@ public class AdminController {
             description = "Добавляет указанные привилегии к роли"
     )
     @PostMapping("/roles/{roleId}/privileges")
-    @PreAuthorize("hasAuthority('MANAGE_ROLES')")
     public ResponseEntity<Role> addPrivilegesToRole(
             @PathVariable Long roleId,
             @RequestBody List<Long> privilegeIds) {

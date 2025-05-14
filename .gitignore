@@ -33,4 +33,8 @@ build/
 .vscode/
 
 # Игнорирование папки codebuddy
-codebuddy/
+.codebuddy/
+
+### CUSTOM ###
+tmlog*.lck
+tmlog*.log

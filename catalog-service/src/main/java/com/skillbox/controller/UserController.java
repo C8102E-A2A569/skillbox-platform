@@ -24,25 +24,25 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Hidden
-    @PutMapping("/{userId}/enroll/{courseId}")
-    public ResponseEntity<String> enrollUserInCourse(@PathVariable String userId, @PathVariable String courseId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (user.getEnrolledCourses() == null) {
-            user.setEnrolledCourses(new ArrayList<>());
-        }
-
-        if (user.getEnrolledCourses().contains(courseId)) {
-            throw ErrorResponse.userAlreadyEnrolled(userId, courseId);
-        }
-
-        user.getEnrolledCourses().add(courseId);
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User enrolled in course: " + courseId);
-    }
+//    @Hidden
+//    @PutMapping("/{userId}/enroll/{courseId}")
+//    public ResponseEntity<String> enrollUserInCourse(@PathVariable String userId, @PathVariable String courseId) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        if (user.getEnrolledCourses() == null) {
+//            user.setEnrolledCourses(new ArrayList<>());
+//        }
+//
+//        if (user.getEnrolledCourses().contains(courseId)) {
+//            throw ErrorResponse.userAlreadyEnrolled(userId, courseId);
+//        }
+//
+//        user.getEnrolledCourses().add(courseId);
+//        userRepository.save(user);
+//
+//        return ResponseEntity.ok("User enrolled in course: " + courseId);
+//    }
 
     @Operation(summary = "Информация о пользователе", description = "Возвращает информацию о пользователе и его курсах")
     @ApiResponses(value = {
@@ -52,6 +52,20 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUser(@PathVariable String userId) {
         User user = userService.getUserById(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    @Operation(summary = "Информация о пользователе", description = "Возвращает информацию о пользователе и его курсах")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Данные о пользователе успешно получены"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
+    @GetMapping("/name/{username}")
+    public ResponseEntity<User> getUserByName(@PathVariable String username) {
+        User user = userService.getUserByName(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -79,6 +93,21 @@ public class UserController {
     })
     @DeleteMapping("/{userId}/courses")
     public ResponseEntity<String> clearUserCourses(@PathVariable String userId) {
+        User user = userService.getUserById(userId);
+
+        user.setEnrolledCourses(new ArrayList<>());
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Список курсов очищен");
+    }
+
+    @Operation(summary = "Достать список курсов пользователя", description = "Отдает все курсы, на которые записан пользователь")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ура"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
+    @GetMapping("/{userId}/courses")
+    public ResponseEntity<String> getUserCourses(@PathVariable String userId) {
         User user = userService.getUserById(userId);
 
         user.setEnrolledCourses(new ArrayList<>());
