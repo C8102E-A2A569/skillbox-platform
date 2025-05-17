@@ -19,6 +19,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -98,10 +99,6 @@ public class CatalogService {
                     token
             );
 
-            // Добавим курс пользователю
-            user.getEnrolledCourses().add(request.getCourseId());
-            userMongoRepo.save(user); // <-- Сохраняем обновлённого пользователя в MongoDB
-
             transactionManager.commit(status);
             return paymentLink;
         } catch (Exception e) {
@@ -116,5 +113,14 @@ public class CatalogService {
 
     public void deleteCourse(String courseId) {
         courseRepo.deleteById(courseId);
+    }
+
+    public void addUserToCourse(String userId, String courseId) {
+        User user = userMongoRepo.findById(userId)
+                .orElseThrow(() -> ErrorResponse.userNotFound(userId));
+
+        // Добавим курс пользователю
+        user.getEnrolledCourses().add(courseId);
+        userMongoRepo.save(user); // <-- Сохраняем обновлённого пользователя в MongoDB
     }
 }

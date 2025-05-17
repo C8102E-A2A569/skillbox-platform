@@ -34,15 +34,15 @@ public class SecurityConfig {
                                 // courses, directions + enrol user
                                 "/catalog/directions", "/catalog/directions/{direction}", "/catalog/course/{courseId}",
                                 // users info + course tasks
-                                "/users/**",
-                                // payment - anyone can pay
-                                "/payment/process"
+                                "/users/**"
                         ).permitAll()
 
 
                         .requestMatchers(
                                 // create link only for authorized users
                                 "/payment/create",
+                                // payment
+                                "/payment/process",
                                 // enroll on course only for authorized users
                                 "/catalog/enroll"
                         ).authenticated()
