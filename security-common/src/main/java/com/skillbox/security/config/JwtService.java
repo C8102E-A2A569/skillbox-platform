@@ -1,4 +1,4 @@
-package com.skillbox.security;
+package com.skillbox.security.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

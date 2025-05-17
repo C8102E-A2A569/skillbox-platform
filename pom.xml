@@ -9,6 +9,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>security-common</module>
     <module>catalog-service</module>
     <module>payment-service</module>
   </modules>
@@ -17,6 +18,7 @@
     <java.version>21</java.version>
     <spring.boot.version>3.4.2</spring.boot.version>
     <atomikos.version>6.0.0</atomikos.version>
+    <security-common.version>1.0.0</security-common.version>
   </properties>
 
   <dependencyManagement>
@@ -38,6 +40,13 @@
         <artifactId>transactions-jdbc</artifactId>
         <version>${atomikos.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.skillbox.security</groupId>
+        <artifactId>security-common</artifactId>
+        <version>${security-common.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

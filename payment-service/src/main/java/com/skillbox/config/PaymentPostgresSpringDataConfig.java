@@ -1,74 +1,71 @@
 package com.skillbox.config;
 
-import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.skillbox.repository.sql",
-        entityManagerFactoryRef = "postgresEntityManagerFactory"
+        basePackages = "com.skillbox.repository", // модуль с репозиториями
+        entityManagerFactoryRef = "paymentPostgresEntityManagerFactory",
+        transactionManagerRef = "paymentTransactionManager"
 )
-public class PostgresConfig {
+public class PaymentPostgresSpringDataConfig {
 
     @Value("${spring.datasource.url}")
     private String url;
-
     @Value("${spring.datasource.username}")
     private String username;
-
     @Value("${spring.datasource.password}")
     private String password;
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
 
-    @Bean(name = "postgresDataSource")
-    @Primary
-    public DataSource postgresDataSource() {
-        AtomikosDataSourceBean dataSource = new AtomikosDataSourceBean();
-        dataSource.setUniqueResourceName("postgres");
-        dataSource.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
-        
-        Properties props = new Properties();
-        props.setProperty("URL", url);
-        props.setProperty("user", username);
-        props.setProperty("password", password);
-        
-        dataSource.setXaProperties(props);
-        dataSource.setPoolSize(5);
-        
+    @Bean
+    public DataSource paymentDataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driverClassName);
         return dataSource;
     }
 
-    @Bean(name = "postgresEntityManagerFactory")
+    @Bean(name = "paymentPostgresEntityManagerFactory")
     @Primary
-    public EntityManagerFactory postgresEntityManagerFactory() {
+    public EntityManagerFactory paymentPostgresEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(postgresDataSource());
-        em.setPackagesToScan("com.skillbox.entity");
-        
+        em.setDataSource(paymentDataSource());
+        em.setPackagesToScan("com.skillbox.security.entity");
+
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
-        
+
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.setProperty(
-                "hibernate.transaction.jta.platform",
-                "org.hibernate.engine.transaction.jta.platform.internal.AtomikosJtaPlatform"
-        );
-        properties.setProperty("jakarta.persistence.transactionType", "JTA");
         em.setJpaProperties(properties);
-        
+
         em.afterPropertiesSet();
         return em.getObject();
     }
+
+    @Bean("paymentTransactionManager")
+    public PlatformTransactionManager paymentTransactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
+
+
 }

@@ -1,18 +1,17 @@
 package com.skillbox.controller;
 
 import com.skillbox.model.User;
-import com.skillbox.repository.mongo.UserRepository;
+import com.skillbox.repository.mongo.UserMongoRepository;
 import com.skillbox.service.UserService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.skillbox.exception.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -22,27 +21,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-//    @Hidden
-//    @PutMapping("/{userId}/enroll/{courseId}")
-//    public ResponseEntity<String> enrollUserInCourse(@PathVariable String userId, @PathVariable String courseId) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        if (user.getEnrolledCourses() == null) {
-//            user.setEnrolledCourses(new ArrayList<>());
-//        }
-//
-//        if (user.getEnrolledCourses().contains(courseId)) {
-//            throw ErrorResponse.userAlreadyEnrolled(userId, courseId);
-//        }
-//
-//        user.getEnrolledCourses().add(courseId);
-//        userRepository.save(user);
-//
-//        return ResponseEntity.ok("User enrolled in course: " + courseId);
-//    }
+    private UserMongoRepository userMongoRepository;
 
     @Operation(summary = "Информация о пользователе", description = "Возвращает информацию о пользователе и его курсах")
     @ApiResponses(value = {
@@ -96,7 +75,7 @@ public class UserController {
         User user = userService.getUserById(userId);
 
         user.setEnrolledCourses(new ArrayList<>());
-        userRepository.save(user);
+        userMongoRepository.save(user);
 
         return ResponseEntity.ok("Список курсов очищен");
     }
@@ -111,8 +90,19 @@ public class UserController {
         User user = userService.getUserById(userId);
 
         user.setEnrolledCourses(new ArrayList<>());
-        userRepository.save(user);
+        userMongoRepository.save(user);
 
         return ResponseEntity.ok("Список курсов очищен");
     }
+
+    @Operation(
+            summary = "Получить всех пользователей",
+            description = "Возвращает список всех пользователей в системе"
+    )
+    @GetMapping("")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userMongoRepository.findAll());
+    }
+
+
 }

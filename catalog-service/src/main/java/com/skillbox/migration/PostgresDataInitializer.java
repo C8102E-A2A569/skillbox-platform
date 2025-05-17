@@ -1,11 +1,11 @@
 package com.skillbox.migration;
 
-import com.skillbox.entity.Privilege;
-import com.skillbox.entity.Role;
-import com.skillbox.entity.UserAccount;
 import com.skillbox.repository.sql.PrivilegeRepository;
 import com.skillbox.repository.sql.RoleRepository;
 import com.skillbox.repository.sql.UserAccountRepository;
+import com.skillbox.security.entity.Privilege;
+import com.skillbox.security.entity.Role;
+import com.skillbox.security.entity.UserAccount;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,4 +1,4 @@
-package com.skillbox.entity;
+package com.skillbox.security.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Если возникает ошибка
+ * Caused by: java.lang.IllegalArgumentException: Not a managed type: class com.skillbox.security.model.UserAccount
+ * То проверьте что путь до @Entity правильный в
+ */
 @Data
 @Builder
 @NoArgsConstructor

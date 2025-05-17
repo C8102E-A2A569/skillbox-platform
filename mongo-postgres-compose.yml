@@ -21,6 +21,16 @@ services:
     volumes:
       - mongodb-data:/data/db
 
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"  # Web UI
+      - "5672:5672"    # AMQP protocol
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+
 volumes:
   postgres-data:
   mongodb-data:

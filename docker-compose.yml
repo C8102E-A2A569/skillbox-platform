@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   postgres:
+    container_name: postgres_skillbox
     image: postgres:17
     environment:
       POSTGRES_DB: skillbox
@@ -14,6 +15,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   mongodb:
+    container_name: mongo_skillbox
     image: mongo:latest
     ports:
       - "27017:27017"
@@ -30,15 +32,19 @@ services:
       - "8082:8082"
       - "5007:5007"
     environment:
-      SPRING_DATA_MONGODB_HOST: mongodb
-      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongo_skillbox
+#      SPRING_DATA_MONGODB_PORT: 27017
       SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING: "true"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/skillbox
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_skillbox:5432/skillbox
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+      ENV_PAYMENT_SERVICE_URL: "http://payment-service:8080"
+      RABBIT_MQ_HOST: rabbitmq
     depends_on:
       - postgres
       - mongodb
+      - rabbitmq
+
 
   payment-service:
     container_name: payment-service
@@ -49,16 +55,28 @@ services:
       - "8080:8080"
       - "5008:5008"
     environment:
-      SPRING_DATA_MONGODB_HOST: mongodb
-      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_HOST: mongo_skillbox
+#      SPRING_DATA_MONGODB_PORT: 27017
       SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING: "true"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/skillbox
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_skillbox:5432/skillbox
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
       ENV_CATALOG_SERVICE_URL: http://catalog-service:8082
+      RABBIT_MQ_HOST: rabbitmq
     depends_on:
       - postgres
       - mongodb
+      - rabbitmq
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"  # Web UI
+      - "5672:5672"    # AMQP protocol
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
 
 volumes:
   postgres-data:

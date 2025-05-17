@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories(
         basePackages = "com.skillbox.repository.mongo"
 )
-public class MongoConfig {
+public class CatalogMongoConfig {
 
     @Value("${spring.data.mongodb.uri}")
     private String mongoUri;

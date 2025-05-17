@@ -3,7 +3,6 @@ import lombok.Data;
 
 @Data
 public class EnrollManuallyRequest {
-    private String userId;
     private String courseId;
     private String tariff;
     private String name;

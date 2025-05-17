@@ -1,30 +1,30 @@
 package com.skillbox.security;
 
-import com.skillbox.exception.BusinessException;
-import com.skillbox.repository.sql.UserAccountRepository;
+import com.skillbox.security.service.CommonSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+@ComponentScan("com.skillbox.security") // otherwise UserAccountRepository won't be found
+public class CommonSecurityAutoConfiguration {
 
-    private final UserAccountRepository repository;
+    // must be implemented in services!
+    private final CommonSecurityService service;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException("User not found"));
+        return username -> service.findByUsername(username)
+                .orElseThrow(() -> new SecurityException("User not found"));
     }
 
     @Bean
@@ -45,8 +45,4 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

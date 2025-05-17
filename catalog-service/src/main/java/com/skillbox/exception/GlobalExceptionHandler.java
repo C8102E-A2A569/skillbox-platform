@@ -16,16 +16,35 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
+        logger.info("[TECH] exception ", ex);
+
         HttpStatus status = (HttpStatus) ex.getStatusCode();
         return new ResponseEntity<>(ex.getReason(), status);
     }
 
+    /**
+     * Handles Business exceptions, which means, user fault, some PREDICTED behaviour
+     */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<?> handleRuntimeException(BusinessException ex) {
         Map<String, ?> body = Map.of(
                 "timestamp", DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now()),
                 "message", ex.getMessage()
         );
+        logger.info("[TECH] exception ", ex);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles all runtime and other unknown exceptions!
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleDefaultException(Exception ex) {
+        Map<String, ?> body = Map.of(
+                "timestamp", DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now()),
+                "message", "Произошла ошибка при обработке запроса, свяжитесь с командой разработки [" + ex.getMessage() + "]"
+        );
+        logger.info("[TECH] exception ", ex);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }
