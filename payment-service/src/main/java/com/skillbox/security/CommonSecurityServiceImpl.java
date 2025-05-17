@@ -1,7 +1,7 @@
 package com.skillbox.security;
 
 import com.skillbox.repository.UserAccountsRepository;
-import com.skillbox.security.entity.UserAccount;
+import com.skillbox.common.security.entity.UserAccount;
 import com.skillbox.security.service.CommonSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

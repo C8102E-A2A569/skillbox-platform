@@ -1,4 +1,4 @@
-package com.skillbox.jms.entity;
+package com.skillbox.common.jms.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

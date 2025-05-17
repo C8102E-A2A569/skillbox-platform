@@ -1,4 +1,4 @@
-package com.skillbox.security.entity;
+package com.skillbox.common.security.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 /**
  * Если возникает ошибка
  * Caused by: java.lang.IllegalArgumentException: Not a managed type: class com.skillbox.security.model.UserAccount
- * То проверьте что путь до @Entity правильный в
+ * То проверьте что путь до @Entity правильный в Spring PostgresqlConfiguration (EntityManager)
+ * <p>
+ * (catalog-service - com.skillbox.config.CatalogPostgresSpringDataConfig) <br/>
+ * (payment-service - com.skillbox.config.PaymentPostgresSpringDataConfig)
  */
 @Data
 @Builder

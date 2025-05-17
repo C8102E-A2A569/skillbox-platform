@@ -53,7 +53,7 @@ public class CatalogPostgresSpringDataConfig {
     public EntityManagerFactory postgresEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(postgresDataSource());
-        em.setPackagesToScan("com.skillbox.security.entity");
+        em.setPackagesToScan("com.skillbox.common.security.entity");
         
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

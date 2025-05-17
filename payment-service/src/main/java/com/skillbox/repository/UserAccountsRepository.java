@@ -1,6 +1,6 @@
 package com.skillbox.repository;
 
-import com.skillbox.security.entity.UserAccount;
+import com.skillbox.common.security.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

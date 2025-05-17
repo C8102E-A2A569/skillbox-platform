@@ -2,8 +2,8 @@ package com.skillbox.service;
 
 import com.skillbox.dto.auth.AuthenticationResponse;
 import com.skillbox.dto.auth.ExtendedRegisterRequest;
-import com.skillbox.security.entity.Role;
-import com.skillbox.security.entity.UserAccount;
+import com.skillbox.common.security.entity.Role;
+import com.skillbox.common.security.entity.UserAccount;
 import com.skillbox.model.User;
 import com.skillbox.repository.mongo.UserMongoRepository;
 import com.skillbox.repository.sql.RoleRepository;

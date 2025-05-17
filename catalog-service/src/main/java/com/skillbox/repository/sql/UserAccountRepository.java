@@ -1,7 +1,7 @@
 package com.skillbox.repository.sql;
 
-import com.skillbox.security.entity.Role;
-import com.skillbox.security.entity.UserAccount;
+import com.skillbox.common.security.entity.Role;
+import com.skillbox.common.security.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

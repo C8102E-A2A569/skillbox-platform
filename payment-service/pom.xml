@@ -134,6 +134,12 @@
       <artifactId>security-common</artifactId>
     </dependency>
 
+
+    <dependency>
+      <groupId>com.skillbox.common</groupId>
+      <artifactId>skillbox-common</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

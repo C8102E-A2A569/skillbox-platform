@@ -1,7 +1,7 @@
 package com.skillbox.controller;
 
-import com.skillbox.security.entity.Privilege;
-import com.skillbox.security.entity.Role;
+import com.skillbox.common.security.entity.Privilege;
+import com.skillbox.common.security.entity.Role;
 import com.skillbox.repository.sql.PrivilegeRepository;
 import com.skillbox.repository.sql.RoleRepository;
 import io.swagger.v3.oas.annotations.Operation;

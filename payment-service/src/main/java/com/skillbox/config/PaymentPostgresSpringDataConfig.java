@@ -48,7 +48,7 @@ public class PaymentPostgresSpringDataConfig {
     public EntityManagerFactory paymentPostgresEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(paymentDataSource());
-        em.setPackagesToScan("com.skillbox.security.entity");
+        em.setPackagesToScan("com.skillbox.common.security.entity");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

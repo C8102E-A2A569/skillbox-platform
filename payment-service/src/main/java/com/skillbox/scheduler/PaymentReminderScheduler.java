@@ -1,15 +1,14 @@
 package com.skillbox.scheduler;
 
-import com.skillbox.jms.entity.Email;
+import com.skillbox.common.jms.entity.Email;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SchedulerJMSExample {
+public class PaymentReminderScheduler {
 
     private final JmsTemplate jmsTemplate;
 

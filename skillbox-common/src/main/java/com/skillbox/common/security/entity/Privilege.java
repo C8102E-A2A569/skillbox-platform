@@ -1,4 +1,4 @@
-package com.skillbox.security.entity;
+package com.skillbox.common.security.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

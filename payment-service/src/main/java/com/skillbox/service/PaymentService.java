@@ -55,7 +55,7 @@ public class PaymentService {
     }
 
     public String createPayment(PaymentRequest request) {
-        String paymentLink = "https://bank.example.com/pay/" + UUID.randomUUID();
+        String paymentLink = "https://sberbank/pay/" + UUID.randomUUID();
 
         Payment payment = new Payment();
         payment.setUserId(request.getUserId());
@@ -65,7 +65,7 @@ public class PaymentService {
         payment.setEmail(request.getEmail());
         payment.setPaymentLink(paymentLink);
         payment.setStatus("PENDING");
-        payment.setExpiresAt(LocalDateTime.now().plusMinutes(10));
+        payment.setExpiresAt(LocalDateTime.now().plusDays(14));
 
         paymentRepository.save(payment);
 

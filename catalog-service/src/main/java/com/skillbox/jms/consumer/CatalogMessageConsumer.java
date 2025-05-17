@@ -1,6 +1,6 @@
 package com.skillbox.jms.consumer;
 
-import com.skillbox.jms.entity.Email;
+import com.skillbox.common.jms.entity.Email;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 

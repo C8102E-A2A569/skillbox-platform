@@ -3,7 +3,7 @@ package com.skillbox.service;
 import com.skillbox.client.PaymentFeignClient;
 import com.skillbox.client.dto.PaymentRequest;
 import com.skillbox.dto.EnrollManuallyRequest;
-import com.skillbox.security.entity.UserAccount;
+import com.skillbox.common.security.entity.UserAccount;
 import com.skillbox.exception.ErrorResponse;
 import com.skillbox.model.Course;
 import com.skillbox.model.TariffType;
