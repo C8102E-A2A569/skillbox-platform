@@ -1,17 +1,17 @@
 package com.skillbox.service;
 
-import com.skillbox.client.PaymentClient;
+import com.skillbox.client.PaymentFeignClient;
+import com.skillbox.client.dto.PaymentRequest;
 import com.skillbox.dto.EnrollManuallyRequest;
-import com.skillbox.entity.UserAccount;
+import com.skillbox.common.security.entity.UserAccount;
 import com.skillbox.exception.ErrorResponse;
 import com.skillbox.model.Course;
 import com.skillbox.model.TariffType;
 import com.skillbox.model.User;
 import com.skillbox.repository.mongo.CourseRepository;
-import com.skillbox.repository.mongo.UserRepository;
+import com.skillbox.repository.mongo.UserMongoRepository;
 import com.skillbox.repository.sql.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -19,14 +19,16 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CatalogService {
 
-    private final UserRepository userRepo;
+    private final UserMongoRepository userMongoRepo;
     private final CourseRepository courseRepo;
-    private final PaymentClient paymentClient;
+//    private final PaymentClient paymentClient;
+    private final PaymentFeignClient paymentClient;
     private final UserAccountRepository userAccountRepository;
     private final PlatformTransactionManager transactionManager;
 
@@ -48,23 +50,23 @@ public class CatalogService {
                 .orElseThrow(() -> ErrorResponse.userNotFound(username));
     }
 
-    public User getUser(String userId) {
-        return userRepo.findById(userId).orElseThrow(() -> ErrorResponse.userNotFound(userId));
+    public User getUserByName(String name) {
+        return userMongoRepo.findByName(name).orElseThrow(() -> ErrorResponse.userNotFoundByUsername(name));
     }
 
-    public String enrollUserToCourse(EnrollManuallyRequest request) {
+    //    @Transactional todo artur atomikos doesnt work
+    public String enrollUserToCourse(EnrollManuallyRequest request, String token) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus status = transactionManager.getTransaction(def);
 
         try {
-            User user = getUser(request.getUserId());
-            String defaultEmail = "dima@example.com";
+            User user = getUserByName(request.getName());
 
-            UserAccount userAccount = userAccountRepository.findByMongoUserId(request.getUserId())
-                    .orElseThrow(() -> ErrorResponse.userNotFound(request.getUserId()));
+            UserAccount userAccount = userAccountRepository.findByMongoUserId(user.getId())
+                    .orElseThrow(() -> ErrorResponse.userNotFoundByUsername(request.getName()));
 
-            if (!defaultEmail.equals(request.getEmail()) && !user.getEmail().equals(request.getEmail())) {
+            if (!user.getEmail().equals(request.getEmail())) {
                 throw ErrorResponse.emailMismatch();
             }
 
@@ -83,19 +85,18 @@ public class CatalogService {
             }
 
             if (user.getEnrolledCourses().contains(request.getCourseId())) {
-                throw ErrorResponse.userAlreadyEnrolled(request.getUserId(), request.getCourseId());
+                throw ErrorResponse.userAlreadyEnrolled(userAccount.getMongoUserId(), request.getCourseId());
             }
 
-            // Добавим курс пользователю
-            user.getEnrolledCourses().add(request.getCourseId());
-            userRepo.save(user); // <-- Сохраняем обновлённого пользователя в MongoDB
-
-            String paymentLink = paymentClient.generatePaymentLink(
-                    request.getUserId(),
-                    request.getCourseId(),
-                    request.getName(),
-                    request.getEmail(),
-                    request.getTariff()
+             String paymentLink = paymentClient.generatePaymentLink(
+                    new PaymentRequest(
+                            user.getId(),
+                            request.getCourseId(),
+                            request.getTariff(),
+                            request.getName(),
+                            request.getEmail()
+                    ),
+                    token
             );
 
             transactionManager.commit(status);
@@ -112,5 +113,14 @@ public class CatalogService {
 
     public void deleteCourse(String courseId) {
         courseRepo.deleteById(courseId);
+    }
+
+    public void addUserToCourse(String userId, String courseId) {
+        User user = userMongoRepo.findById(userId)
+                .orElseThrow(() -> ErrorResponse.userNotFound(userId));
+
+        // Добавим курс пользователю
+        user.getEnrolledCourses().add(courseId);
+        userMongoRepo.save(user); // <-- Сохраняем обновлённого пользователя в MongoDB
     }
 }

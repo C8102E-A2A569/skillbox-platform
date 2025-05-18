@@ -12,6 +12,9 @@ public class ErrorResponse {
     public static ResponseStatusException paymentLinkNotFound(String paymentLink) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ссылка " + paymentLink + " некорректна!");
     }
+    public static ResponseStatusException paymentLinkAlreadyExists(String userId, String courseId, String link, String date) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ссылка для оплаты на курс" + courseId + " для пользователя " + userId + " уже есть: [" + link + "], expires on " + date);
+    }
 
     public static ResponseStatusException paymentLinkExpired() {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ссылка на оплату просрочена!");

@@ -6,7 +6,7 @@ import com.skillbox.model.CourseTask;
 import com.skillbox.model.User;
 import com.skillbox.repository.mongo.CourseRepository;
 import com.skillbox.repository.mongo.CourseTaskRepository;
-import com.skillbox.repository.mongo.UserRepository;
+import com.skillbox.repository.mongo.UserMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserMongoRepository userMongoRepository;
 
     @Autowired
     private CourseTaskRepository courseTaskRepository;
@@ -25,11 +25,11 @@ public class UserService {
     private CourseRepository courseRepository;
 
     public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> ErrorResponse.userNotFound(userId));
+        return userMongoRepository.findById(userId).orElseThrow(() -> ErrorResponse.userNotFound(userId));
     }
 
     public User getUserByName(String name) {
-        return userRepository.findByName(name).orElseThrow(() -> ErrorResponse.userNotFoundByUsername(name));
+        return userMongoRepository.findByName(name).orElseThrow(() -> ErrorResponse.userNotFoundByUsername(name));
     }
 
     public String getTaskDescriptionByCourseId(String userId, String courseId) {

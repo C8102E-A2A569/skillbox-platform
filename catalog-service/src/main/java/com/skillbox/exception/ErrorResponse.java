@@ -56,4 +56,8 @@ public class ErrorResponse {
     public static ResponseStatusException userNotFoundByUsername(String username) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь с именем " + username + " не найден");
     }
+
+    public static ResponseStatusException userWithThisNameAlreadyExists(String username) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь с именем " + username + " уже существует");
+    }
 }

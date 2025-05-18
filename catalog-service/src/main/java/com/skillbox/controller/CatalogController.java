@@ -97,14 +97,11 @@ public class CatalogController {
             }
     )
     @PostMapping("/enroll")
-    public ResponseEntity<String> enrollUser(@RequestBody EnrollManuallyRequest request) {
-        try {
-            String response = catalogService.enrollUserToCourse(request);
+    public ResponseEntity<String> enrollUser(@RequestBody EnrollManuallyRequest request,
+                                             @RequestHeader(value="Authorization", defaultValue = "no_authorization") String token) {
+
+            String response = catalogService.enrollUserToCourse(request, token);
             return ResponseEntity.ok(response);
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            throw ErrorResponse.internalError("Произошла ошибка при записи на курс");
-        }
+
     }
 }

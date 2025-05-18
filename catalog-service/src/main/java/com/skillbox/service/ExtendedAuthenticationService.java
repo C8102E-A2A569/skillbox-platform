@@ -2,13 +2,13 @@ package com.skillbox.service;
 
 import com.skillbox.dto.auth.AuthenticationResponse;
 import com.skillbox.dto.auth.ExtendedRegisterRequest;
-import com.skillbox.entity.Role;
-import com.skillbox.entity.UserAccount;
+import com.skillbox.common.security.entity.Role;
+import com.skillbox.common.security.entity.UserAccount;
 import com.skillbox.model.User;
-import com.skillbox.repository.mongo.UserRepository;
+import com.skillbox.repository.mongo.UserMongoRepository;
 import com.skillbox.repository.sql.RoleRepository;
 import com.skillbox.repository.sql.UserAccountRepository;
-import com.skillbox.security.JwtService;
+import com.skillbox.security.config.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +25,7 @@ public class ExtendedAuthenticationService {
 
     private final UserAccountRepository userAccountRepository;
     private final RoleRepository roleRepository;
-    private final UserRepository mongoUserRepository;
+    private final UserMongoRepository mongoUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 

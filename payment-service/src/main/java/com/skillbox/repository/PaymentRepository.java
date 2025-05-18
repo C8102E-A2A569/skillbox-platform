@@ -8,4 +8,6 @@ public interface PaymentRepository extends MongoRepository<Payment, String> {
     Optional<Payment> findById(String id);
     Optional<Payment> findByPaymentLink(String paymentLink);
     boolean existsByUserIdAndCourseIdAndPaymentLink(String userId, String courseId, String paymentLink);
+
+    Optional<Payment> findByUserIdAndCourseId(String userId, String courseId);
 }

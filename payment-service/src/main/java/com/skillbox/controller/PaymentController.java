@@ -28,7 +28,6 @@ public class PaymentController {
     @Autowired
     private BankRepository bankRepository;
 
-    @Hidden
     @PostMapping("/create")
     @Operation(summary = "Создать платеж", description = "Генерирует ссылку на оплату для пользователя.")
     @ApiResponse(responseCode = "200", description = "Ссылка на оплату успешно создана", content = @Content(mediaType = "text/plain"))

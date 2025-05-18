@@ -3,20 +3,21 @@ package com.skillbox.service;
 import com.skillbox.dto.auth.AuthenticationRequest;
 import com.skillbox.dto.auth.AuthenticationResponse;
 import com.skillbox.dto.auth.RegisterRequest;
-import com.skillbox.entity.Role;
-import com.skillbox.entity.UserAccount;
+import com.skillbox.common.security.entity.Role;
+import com.skillbox.common.security.entity.UserAccount;
 import com.skillbox.exception.ErrorResponse;
 import com.skillbox.model.User;
-import com.skillbox.repository.mongo.UserRepository;
+import com.skillbox.repository.mongo.UserMongoRepository;
 import com.skillbox.repository.sql.RoleRepository;
 import com.skillbox.repository.sql.UserAccountRepository;
-import com.skillbox.security.JwtService;
+import com.skillbox.security.config.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +25,20 @@ public class AuthenticationService {
 
     private final UserAccountRepository userAccountRepository;
     private final RoleRepository roleRepository;
-    private final UserRepository mongoUserRepository;
+    private final UserMongoRepository mongoUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 //    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
+
+        // validation
+        Optional<UserAccount> dbUserAccount = userAccountRepository.findByUsername(request.getUsername());
+        if (dbUserAccount.isPresent()) {
+            throw ErrorResponse.userWithThisNameAlreadyExists(request.getUsername());
+        }
+
         // Create MongoDB user
         User mongoUser = new User();
         mongoUser.setName(request.getUsername());

@@ -46,29 +46,30 @@ public class MongoDataMigration implements ApplicationListener<ContextRefreshedE
 
     private void addInitialUsers() {
         if (mongoTemplate.count(new Query(Criteria.where("email").exists(true)), User.class) == 0) {
-            User user1 = new User();
-            user1.setId(String.valueOf(1));
-            user1.setName("Дмитрий Борисович");
-            user1.setEmail("opd@example.com");
-            user1.setEnrolledCourses(List.of());
+//            User user1 = new User();
+//            user1.setId(String.valueOf(1));
+//            user1.setName("Дмитрий Борисович");
+//            user1.setEmail("opd@example.com");
+//            user1.setEnrolledCourses(List.of());
+//
+//            User user2 = new User();
+//            user2.setId(String.valueOf(2));
+//            user2.setName("Борис Дмитриевич");
+//            user2.setEmail("dopsa@example.com");
+//            user2.setEnrolledCourses(List.of());
+//
+//            User user3 = new User();
+//            user3.setId(String.valueOf(3));
+//            user3.setName("Афанасий");
+//            user3.setEmail("dima@example.com");
+//            user3.setEnrolledCourses(List.of());
+//            mongoTemplate.save(user1);
+//            mongoTemplate.save(user2);
+//            mongoTemplate.save(user3);
 
-            User user2 = new User();
-            user2.setId(String.valueOf(2));
-            user2.setName("Борис Дмитриевич");
-            user2.setEmail("dopsa@example.com");
-            user2.setEnrolledCourses(List.of());
-
-            User user3 = new User();
-            user3.setId(String.valueOf(3));
-            user3.setName("Афанасий");
-            user3.setEmail("dima@example.com");
-            user3.setEnrolledCourses(List.of());
-
+            // save admin to db
             mongoTemplate.save(new User(String.valueOf(0), "admin", "example@mail.ru", new ArrayList<>()));
 
-            mongoTemplate.save(user1);
-            mongoTemplate.save(user2);
-            mongoTemplate.save(user3);
 
             System.out.println("Initial users added.");
         }
