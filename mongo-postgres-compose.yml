@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   postgres:
+    container_name: postgres_skillbox
     image: postgres:17
     environment:
       POSTGRES_DB: skillbox
@@ -14,6 +15,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   mongodb:
+    container_name: mongo_skillbox
     image: mongo:latest
     ports:
       - "27017:27017"
