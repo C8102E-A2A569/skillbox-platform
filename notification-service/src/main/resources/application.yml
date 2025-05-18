@@ -16,6 +16,11 @@ spring:
         max-concurrency: 5
         acknowledge-mode: auto
         prefetch: 1
+        missing-queues-fatal: false
+        retry:
+          max-attempts: 20
+          initial-interval: 5000ms
+
 
 notification-service:
   rabbitmq:
@@ -25,3 +30,30 @@ notification-service:
 
 server:
   port: 9094
+
+
+rabbit:
+  exchanges:
+    - notification-exchange
+  queues:
+    - notification-queue
+  bindings:
+    - queue: notification-queue
+      exchange: notification-exchange
+      routingKey: notification.key
+
+#rabbit:
+#  exchanges:
+#    - myFirstExchange
+#    - mySecondExchange
+#  queues:
+#    - myFirstQueue
+#    - mySecondQueue
+#    - myThirdQueue
+#  bindings:
+#    - queue: myFirstQueue
+#      exchange: myFirstExchange
+#      routingKey: route-to-first-q
+#    - queue: mySecondQueue
+#      exchange: myFirstExchange
+#      routingKey: route-to-second-q

@@ -14,6 +14,6 @@ public interface PaymentRepository extends MongoRepository<Payment, String> {
 
     Optional<Payment> findByUserIdAndCourseId(String userId, String courseId);
 
-    List<Payment> findAllByExpiresAtAfter(LocalDateTime currentTime);
+    List<Payment> findAllByExpiresAtAfterAndStatus(LocalDateTime currentTime, String status);
     List<Payment> findAllByExpiresAtBeforeAndStatus(LocalDateTime currentTime, String status);
 }

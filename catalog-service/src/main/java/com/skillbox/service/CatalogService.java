@@ -54,7 +54,6 @@ public class CatalogService {
         return userMongoRepo.findByName(name).orElseThrow(() -> ErrorResponse.userNotFoundByUsername(name));
     }
 
-    //    @Transactional todo artur atomikos doesnt work
     public String enrollUserToCourse(EnrollManuallyRequest request, String token) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);

@@ -30,22 +30,6 @@ import org.springframework.context.annotation.Configuration;
 public class AdapterRabbitMQConfig {
 
     private final NotificationAdapterProperties properties;
-    public String queueName = "notification-queue";
-
-    @Bean
-    public Queue notificationQueue() {
-        return new Queue(queueName, true, false, false);
-    }
-
-    @Bean
-    public DirectExchange notificationExchange() {
-        return new DirectExchange(properties.getExchangeName());
-    }
-
-    @Bean
-    public Binding notificationBinding(Queue notificationQueue, DirectExchange notificationExchange) {
-        return BindingBuilder.bind(notificationQueue).to(notificationExchange).with(properties.getRoutingKey());
-    }
 
     /**
      * Connection factory, is needed for creating connection => configure connection here

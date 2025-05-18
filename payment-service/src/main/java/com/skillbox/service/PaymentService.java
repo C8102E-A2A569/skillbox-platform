@@ -122,9 +122,7 @@ public class PaymentService {
                 payment.setStatus(PaymentStatus.SUCCESS.name());
                 paymentRepository.save(payment);
 
-
-//                restTemplate.put(enrollUrl, null); todo artur вот тут можно jms, отправка
-                // send by rabbitMQ successfull payment request
+                // JMS send by rabbitMQ successfull payment request
                 producer.sendPaymentInfo(
                         new PaymentOperationMessage(payment.getUserId(), payment.getCourseId())
                 );
