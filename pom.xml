@@ -9,10 +9,12 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>notification-adapter</module>
     <module>skillbox-common</module>
     <module>security-common</module>
     <module>catalog-service</module>
     <module>payment-service</module>
+    <module>notification-service</module>
   </modules>
 
   <properties>
@@ -21,6 +23,7 @@
     <atomikos.version>6.0.0</atomikos.version>
     <security-common.version>1.0.0</security-common.version>
     <skillbox-common.version>1.0.0</skillbox-common.version>
+    <notification-adapter.version>1.0.0</notification-adapter.version>
   </properties>
 
   <dependencyManagement>
@@ -43,17 +46,23 @@
         <version>${atomikos.version}</version>
       </dependency>
 
+      <!-- custom modules -->
       <dependency>
         <groupId>com.skillbox.security</groupId>
         <artifactId>security-common</artifactId>
         <version>${security-common.version}</version>
       </dependency>
 
-
       <dependency>
         <groupId>com.skillbox.common</groupId>
         <artifactId>skillbox-common</artifactId>
         <version>${skillbox-common.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.skillbox.notification.adapter</groupId>
+        <artifactId>notification-adapter</artifactId>
+        <version>${notification-adapter.version}</version>
       </dependency>
 
     </dependencies>

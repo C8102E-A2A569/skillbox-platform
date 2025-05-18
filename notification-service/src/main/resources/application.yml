@@ -1,0 +1,27 @@
+RABBIT_MQ_HOST: ${ENV_RABBIT_MQ_HOST:localhost}
+
+
+spring:
+  application:
+    name: notification-service
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST}
+    port: 5672
+    username: rabbit
+    password: rabbit
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 1
+        max-concurrency: 5
+        acknowledge-mode: auto
+        prefetch: 1
+
+notification-service:
+  rabbitmq:
+    queue: notification-queue
+    exchange: notification-exchange
+    key: notification.key
+
+server:
+  port: 9094

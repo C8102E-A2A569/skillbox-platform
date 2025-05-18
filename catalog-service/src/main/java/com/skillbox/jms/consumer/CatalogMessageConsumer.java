@@ -12,7 +12,11 @@ import org.springframework.stereotype.Service;
 public class CatalogMessageConsumer {
     private final CatalogService catalogService;
 
-    @JmsListener(destination = "mailbox", containerFactory = "myFactory")
+    /**
+     * TEST SCHEDULER
+     */
+//    @JmsListener(destination = "mailbox", containerFactory = "myFactory")
+    @Deprecated
     public void receiveMessage(Email email) {
         System.out.println("Received <" + email + ">");
     }

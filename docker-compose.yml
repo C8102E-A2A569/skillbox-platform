@@ -23,6 +23,18 @@ services:
     volumes:
       - mongodb-data:/data/db
 
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"  # Web UI
+      - "5672:5672"    # AMQP protocol
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+
+
   catalog-service:
     container_name: catalog-service
     build:
@@ -39,7 +51,7 @@ services:
 #      SPRING_DATASOURCE_USERNAME: postgres
 #      SPRING_DATASOURCE_PASSWORD: postgres
       ENV_PAYMENT_SERVICE_URL: "http://payment-service:8080"
-      RABBIT_MQ_HOST: rabbitmq
+      ENV_RABBIT_MQ_HOST: rabbitmq
     depends_on:
       - postgres
       - mongodb
@@ -62,22 +74,24 @@ services:
 #      SPRING_DATASOURCE_USERNAME: postgres
 #      SPRING_DATASOURCE_PASSWORD: postgres
       ENV_CATALOG_SERVICE_URL: http://catalog-service:8082
-      RABBIT_MQ_HOST: rabbitmq
+      ENV_RABBIT_MQ_HOST: rabbitmq
     depends_on:
       - postgres
       - mongodb
       - rabbitmq
 
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3-management
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
     ports:
-      - "15672:15672"  # Web UI
-      - "5672:5672"    # AMQP protocol
+      - "9094:9094"
     environment:
-      RABBITMQ_DEFAULT_USER: rabbit
-      RABBITMQ_DEFAULT_PASS: rabbit
-
+      ENV_RABBIT_MQ_HOST: rabbitmq
+  
+  
+  
 volumes:
   postgres-data:
   mongodb-data:
