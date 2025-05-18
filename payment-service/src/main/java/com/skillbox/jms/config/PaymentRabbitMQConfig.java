@@ -60,15 +60,5 @@ public class PaymentRabbitMQConfig {
         return converter;
     }
 
-
-    /**
-     * Rabbit Serialization
-     */
-    @Bean
-    public org.springframework.amqp.support.converter.MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
-
-
 }
 

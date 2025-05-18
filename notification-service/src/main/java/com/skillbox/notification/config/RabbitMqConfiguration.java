@@ -25,12 +25,21 @@ public class RabbitMqConfiguration {
     private List<RabbitBindingConfig> bindings = new ArrayList<>();
 
     @Bean
-    public HashMap<String, Exchange> createExchanges(AmqpAdmin amqpAdmin) {
+    public HashMap<String, Exchange> createExchanges(AmqpAdmin amqpAdmin) throws InterruptedException {
+        boolean rabbitMqUp = false;
         HashMap<String, Exchange> exchangeMap = new HashMap<>();
-        for (String exchangeName : exchanges) {
-            Exchange exchange = ExchangeBuilder.directExchange(exchangeName).build();
-            amqpAdmin.declareExchange(exchange);
-            exchangeMap.put(exchangeName, exchange);
+        while (!rabbitMqUp) {
+            Thread.sleep(10_000);
+            // exception is thrown because rabbitMQ is not started
+            try {
+                for (String exchangeName : exchanges) {
+                    Exchange exchange = ExchangeBuilder.directExchange(exchangeName).build();
+                    amqpAdmin.declareExchange(exchange);
+                    exchangeMap.put(exchangeName, exchange);
+                }
+                rabbitMqUp = true;
+            }
+            catch (Exception ignored) {}
         }
         return exchangeMap;
     }

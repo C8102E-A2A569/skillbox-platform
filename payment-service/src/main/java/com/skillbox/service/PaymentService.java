@@ -58,7 +58,7 @@ public class PaymentService {
 
     public String createPayment(PaymentRequest request) {
 
-        Optional<Payment> paymentOptional = paymentRepository.findByUserIdAndCourseId(request.getUserId(), request.getCourseId());
+        Optional<Payment> paymentOptional = paymentRepository.findByUserIdAndCourseIdAndStatus(request.getUserId(), request.getCourseId(), PaymentStatus.PENDING.name());
         if (paymentOptional.isPresent()) {
             Payment paid = paymentOptional.get();
             throw ErrorResponse.paymentLinkAlreadyExists(paid.getUserId(), paid.getCourseId(), paid.getPaymentLink(), paid.getExpiresAt().toString());

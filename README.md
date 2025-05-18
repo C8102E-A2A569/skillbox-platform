@@ -52,8 +52,8 @@
    http://localhost:8082/catalog/enroll
 5) оплатить курс, вставив URL оплаты
    http://localhost:8080/payment/process?userId=6826598bfde10c7aa26a7f55&paymentLink=https://sberbank/pay/a1d94590-b15e-4bd1-a199-c2b3de296e9f&amount=1000
-6) увилеть что в БД у user появилась отметка о том что он записан на курс
-проверить лог catalog-service там должно быть уведомление о том что пользователь записан,
+6) увидеть что в БД у user появилась отметка о том что он записан на курс
+проверить лог catalog-service там должно быть уведомление о том что пользователь записан, (в логах сервиса появится запись)
 это как раз через JMS payment-service -> catalog-service чтобы в catalog-service пометили что пользак записался
    
 7) проверить scheduler отправку напоминаний
@@ -66,6 +66,25 @@
 - проверить в БД в таблице `payment` что status = FAILED
 
 кайф!
+
+URL на rabbitMQ 
+http://localhost:15672/#/queues
+
+очереди:
+- **payments** (`payment-service` -> `catalog-service`)
+для отправки события (сообщения) о том что пользователь оплатил чек (payment) и чтобы его щачислили на курс
+
+`payment-service` - оплата
+
+`catalog-service` - зачисление на курс
+
+- **notification-queue** (`payment-service` -> `notification-service`)
+каждый день в 00:00 происходит отсыл уведомлений пользователям, у которых чек еще не оплачен (если он не просрочен expiresDate позже чем now())
+  (по факту каждые 10 секунд но это для демонстрации)
+
+`payment-service` проверяет что нет просрочки и есть счет на оплату (payment) со статусом PENDING
+`notification-service` это как бы external service на который мы через JCA шлем запрос на отсыл уведомления пользователям по почте
+
 
 ## ТЗ
 ### Лабораторная работа 1 (БЛПС)
