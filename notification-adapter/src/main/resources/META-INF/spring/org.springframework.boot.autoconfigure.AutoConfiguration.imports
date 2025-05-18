@@ -1,0 +1,2 @@
+com.skillbox.notification.adapter.rabbitmq.config.AdapterRabbitMQConfig
+com.skillbox.notification.adapter.jca.config.JcaConfiguration

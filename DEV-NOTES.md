@@ -40,7 +40,12 @@ WARNING: Catalog-service unreachable!
 ### security-common
 check README.md in `security-common/README.md` to find what needs to be done  
 
+## Testing
+http://localhost:15672/ - address for rabbitMQ web
 
+## Problems
+jms вопреки всем ожиданиям нормально настроил сериализацию и все из коробки, а вот с RabbitTemplate какая-то фигня
+сериализация не работает почему-то хз почему
 
 
 

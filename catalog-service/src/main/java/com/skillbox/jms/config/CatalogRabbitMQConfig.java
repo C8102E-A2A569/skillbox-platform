@@ -2,6 +2,7 @@ package com.skillbox.jms.config;
 
 import com.rabbitmq.jms.admin.RMQConnectionFactory;
 import jakarta.jms.ConnectionFactory;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -59,59 +60,5 @@ public class CatalogRabbitMQConfig {
         return converter;
     }
 
-
-// RABBIT MQ example of creating queue and exchange
-/*
-import org.springframework.amqp.core.*;
-
-//private static String routingKey = "test_routing_key";
-//private static String exchange = "test_exchange";
-//@Getter
-//private static String queueName = "test_queue";
-
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName, false);
-    }
-
-    @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(exchange);
-    }
-
-    @Bean
-    public Binding binding(Queue queue, Exchange exchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(routingKey)
-                .noargs()
-                ;
-    }
-*/
-
-//custom producer example
-/*
-    @PostConstruct
-    public void onStart() {
-
-        String messageContent = UUID.randomUUID().toString();
-        jmsTemplate.setReceiveTimeout(2000);
-        jmsTemplate.send(RabbitMQConfig.getQueueName(), session -> {
-            TextMessage message = session.createTextMessage(messageContent);
-            message.setJMSCorrelationID(messageContent);
-            return message;
-        });
-    }
-*/
-
-
-// custom consumer example
-/*
-    @JmsListener(destination = "test_queue") // Слушаем очередь "queueName"
-    public void receiveMessage(String message) {
-        System.out.println("Received message: " + message);
-    }
-*/
 }
 
